@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EARTH-001 地球培养皿</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#030b17;color:#c9faff;font:14px system-ui}
+header,section,footer{border:1px solid #187c92;background:#071b2ddd;border-radius:8px;padding:12px}
+header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+h1{font-size:18px;margin:0;color:#73eaf7}
+h2{font-size:14px;color:#6bd7e8;margin:0 0 12px}
+#layout{display:grid;grid-template-columns:220px 1fr 260px;gap:10px;padding:10px}
+aside{display:flex;flex-direction:column;gap:10px}
+button{background:#123e56;color:#e4fcff;border:1px solid #32a7bd;border-radius:7px;padding:12px;cursor:pointer;touch-action:manipulation}
+button:disabled{opacity:.35}
+#stage{position:relative;min-height:500px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse,#143251,#020710 75%);border:1px solid #155a75;border-radius:12px;touch-action:none}
+#earth{position:relative;width:min(65vw,65vh,600px);aspect-ratio:1;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 28% 26%,#428dbb,#125083 38%,#071c51 70%,#010c26 95%);box-shadow:0 0 30px #19d6ef77,inset -30px -20px 45px #000a;transform:rotate(-8deg)}
+#earth:before{content:"";position:absolute;inset:9% 15%;border-radius:45%;background:#52a39b;clip-path:polygon(10% 4%,58% 0,90% 23%,70% 45%,91% 65%,55% 60%,42% 95%,20% 68%,0 40%)}
+#earth:after{content:"";position:absolute;inset:35% 5% 12% 58%;background:#b6a36b;clip-path:polygon(10% 0,100% 20%,82% 75%,30% 100%,0 55%)}
+.marker{position:absolute;z-index:3;border:2px solid currentColor;border-radius:50%;display:grid;place-items:center;font-weight:bold;background:#141b2de8;box-shadow:0 0 15px currentColor;user-select:none;touch-action:none}
+.small{width:38px;height:38px;color:#ffd66a}
+.large{width:52px;height:52px;color:#ff6876;animation:pulse 1.5s infinite}
+.human{width:35px;height:35px;color:#b6b8c5}
+.selected{outline:3px solid white}
+@keyframes pulse{50%{box-shadow:0 0 30px currentColor;transform:scale(1.08)}}
+.meter{height:8px;background:#153449;border-radius:10px;overflow:hidden;margin:10px 0}
+.meter i{display:block;height:100%;background:#27d1cf}
+#details{min-height:140px;line-height:1.8}
+#logs{max-height:150px;overflow:auto;font-size:12px;line-height:1.8}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#tap{width:100%;background:#702537}
+#message{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#071c2df0;padding:10px;border:1px solid #35b2ce;border-radius:6px;width:max-content;max-width:90%;text-align:center}
+footer{margin:0 10px 10px;display:flex;justify-content:center;align-items:center;gap:12px}
+#modal{position:fixed;inset:0;background:#000c;z-index:10;display:grid;place-items:center;padding:24px}
+#modal>div{max-width:520px;background:#092033;border:1px solid #39d2e9;padding:26px;border-radius:12px;line-height:1.8}
+#modal[hidden]{display:none}
+@media(max-width:850px){
+#layout{display:flex;flex-direction:column}
+aside{display:contents}
+aside section{order:1}
+#stage{min-height:390px;order:0}
+#earth{width:min(88vw,380px)}
+header{font-size:12px}
+footer{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+<header>
+<h1>◈ EARTH-001 地球培养皿</h1>
+<span id="day">DAY 001</span>
+<span>星球建造学 · 研究生终端</span>
+</header>
+<div id="layout">
+<aside>
+<section>
+<h2>WORLD MAP / 实验档案</h2>
+<p>🌐 地球异常监控</p>
+<p>课题负责人：见习研究生</p>
+<p>指导教授：离线 💤</p>
+</section>
+<section>
+<h2>EXPERIMENT STATUS</h2>
+<p>地球稳定度 <b id="stability">100%</b></p>
+<div class="meter"><i id="stablebar" style="width:100%"></i></div>
+<p>采样记录 <b id="samples">0 / 3</b></p>
+<div class="meter"><i id="samplebar" style="width:0"></i></div>
+<p>已清除异常：<b id="cleared">0</b></p>
+</section>
+<section>
+<h2>导师留言</h2>
+<p>“地球交给你了。小问题拖走，大问题自己研究一下。”</p>
+</section>
+</aside>
+<main id="stage">
+<div id="earth"></div>
+<div id="message">拖走黄色警报，处理红色大型灾害</div>
+</main>
+<aside>
+<section>
+<h2>ANOMALY INSPECTOR</h2>
+<div id="details">点击地球上的警报查看详情。</div>
+</section>
+<section>
+<h2>COUNTERMEASURES</h2>
+<div class="actions">
+<button id="sample" disabled>🧪 滴管采样</button>
+<button id="remove" disabled>⚠ 强制拔除</button>
+</div>
+<p id="progress"></p>
+<button id="tap" hidden>连续点击拔除！</button>
+</section>
+<section>
+<h2>LABORATORY LOG</h2>
+<div id="logs"></div>
+</section>
+</aside>
+</div>
+<footer>
+<button id="next">▷ 推进实验</button>
+<button id="reset">↺ 重新开始</button>
+<span id="phase">阶段 1 / 3</span>
+</footer>
+<div id="modal" hidden>
+<div>
+<h1 id="modalTitle"></h1>
+<p id="modalText"></p>
+<button id="continue">继续</button>
+</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let phase=0,selected=null,samples=0,cleared=0;
+let stability=100,taps=0,events=[],busy=false;
+const waves=[
+[
+['small','太平洋热带风暴','太平洋',30,36],
+['small','火山活动','南美洲',29,70],
+['large','地壳异常','东亚',76,35],
+['human','地区冲突','欧亚大陆',55,29]
+],
+[
+['small','异常洪水','欧洲',47,31],
+['large','海底岩浆活动','印度洋',65,67],
+['small','极端高温','非洲',48,54],
+['large','板块共振','日本近海',82,40]
+],
+[
+['small','异常洋流','太平洋',20,58],
+['large','深层地壳扰动','西太平洋',79,65],
+['small','超级风暴','北美洲',22,28]
+]
+];
+function log(s){
+$('logs').innerHTML='<div>▸ '+s+'</div>'+$('logs').innerHTML;
+}
+function note(s){$('message').textContent=s}
+function update(){
+$('samples').textContent=samples+' / 3';
+$('samplebar').style.width=Math.min(100,samples/3*100)+'%';
+$('cleared').textContent=cleared;
+$('stability').textContent=stability+'%';
+$('stablebar').style.width=stability+'%';
+$('phase').textContent='阶段 '+(phase+1)+' / 3';
+$('day').textContent='DAY '+String(1+phase*30).padStart(3,'0');
+}
+function select(e){
+selected=e;taps=0;
+$('tap').hidden=true;
+$('progress').textContent='';
+document.querySelectorAll('.marker').forEach(x=>{
+x.classList.toggle('selected',x.dataset.id===e.id);
+});
+$('details').innerHTML='<b>'+e.name+'</b><p>位置：'+e.place+
+'</p><p>类型：'+({small:'轻度自然灾害',large:'大型自然灾害',human:'人类内部事件'}[e.type])+
+'</p><p>'+(e.type==='human'?'文明自主行为，干预权限不足。':e.type==='small'?'向外拖拽警报即可拔除。':'大型异常已扎根，普通拖拽无法清除。')+'</p>';
+$('sample').disabled=e.type!=='large'||e.sampled;
+$('remove').disabled=e.type!=='large';
+}
+function clearEvent(e){
+if(e.done)return;
+e.done=true;cleared++;
+stability=Math.min(100,stability+2);
+document.querySelector('[data-id="'+e.id+'"]')?.remove();
+selected=null;
+$('details').textContent='异常已处理。';
+$('sample').disabled=true;
+$('remove').disabled=true;
+$('tap').hidden=true;
+log('已拔除：'+e.name);
+note('异常已成功拔除');
+update();
+}
+function spawn(){
+selected=null;
+$('details').textContent='请选择异常警报';
+$('sample').disabled=true;
+$('remove').disabled=true;
+$('tap').hidden=true;
+$('progress').textContent='';
+events=waves[phase].map((a,i)=>({
+id:phase+'-'+i,type:a[0],name:a[1],place:a[2],
+x:a[3],y:a[4],sampled:false,done:false
+}));
+document.querySelectorAll('.marker').forEach(x=>x.remove());
+events.forEach(e=>{
+let el=document.createElement('div');
+el.className='marker '+e.type;
+el.dataset.id=e.id;
+el.textContent=e.type==='small'?'!':e.type==='human'?'×':'⚠';
+el.style.left=e.x+'%';
+el.style.top=e.y+'%';
+$('stage').appendChild(el);
+let start=null;
+el.addEventListener('pointerdown',v=>{
+v.stopPropagation();
+start={x:v.clientX,y:v.clientY};
+el.setPointerCapture(v.pointerId);
+});
+el.addEventListener('pointermove',v=>{
+if(!start)return;
+let d=Math.hypot(v.clientX-start.x,v.clientY-start.y);
+if(e.type==='small'&&d>70){
+start=null;clearEvent(e);
+}else if(e.type==='large'&&d>35){
+note('大型灾害无法直接拖动，请采样或强制拔除');
+}
+});
+el.addEventListener('pointerup',()=>{
+if(start&&!e.done)select(e);
+start=null;
+});
+});
+note('第 '+(phase+1)+' 轮异常涌现！');
+log('新一轮警报出现');
+update();
+}
+$('sample').onclick=()=>{
+if(!selected||selected.sampled||busy)return;
+busy=true;
+let e=selected;
+note('🧪 滴管下降……正在吸取异常样本');
+$('sample').disabled=true;
+setTimeout(()=>{
+e.sampled=true;samples++;busy=false;
+note('样本已归档，仍需拔除灾害');
+log('采样完成：'+e.name);
+update();
+},1300);
+};
+$('remove').onclick=()=>{
+if(!selected)return;
+taps=0;
+$('tap').hidden=false;
+$('progress').textContent='拔除进度 0 / 12';
+note('连续点击按钮，将灾害拔出');
+};
+$('tap').onclick=()=>{
+if(!selected)return;
+taps++;
+$('progress').textContent='拔除进度 '+taps+' / 12';
+if(taps>=12)clearEvent(selected);
+};
+function modal(t,s,cb){
+$('modalTitle').textContent=t;
+$('modalText').textContent=s;
+$('modal').hidden=false;
+$('continue').onclick=()=>{
+$('modal').hidden=true;
+if(cb)cb();
+};
+}
+$('next').onclick=()=>{
+if(phase<2){
+phase++;
+stability=Math.max(65,stability-6);
+spawn();
+if(phase===2)modal('潜在异常仍未定位',
+'教授留下的地壳异常一直没有找到源头。实验室建议保留采样记录。');
+}else{
+modal('最终预警 · 日本近海 9.9级地震',
+'检测到虚构的极端地震预警。'+
+(samples>=3?
+'采样记录达到要求，成功提前定位并制止异常。地球新闻将其报道为一次机器误报。':
+'由于采样数据不足，无法及时定位深层异常。实验未能完成最终干预。'),
+()=>{
+$('next').disabled=true;
+note('DEMO END · 实验报告已归档');
+});
+}
+};
+$('reset').onclick=()=>location.reload();
+modal('EARTH-001 · 课题交接',
+'你是外星大学星球建造学的新研究生。导师把地球培养皿交给了你：只能处理自然灾害，不能干预人类内部行为。请收集至少3份大型异常样本，迎接最终考核。',
+spawn);
+</script>
+</body>
+</html>
