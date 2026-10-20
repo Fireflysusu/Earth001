@@ -5,6 +5,88 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>EARTH-001 · 地球培养皿</title>
+
+/* EARTH-001 v0.4 · Holographic HUD */
+.marker{
+  isolation:isolate;
+  border:1px solid currentColor!important;
+  background:radial-gradient(circle at 32% 20%,
+    #ffffff47,#0d2840ad 45%,#030e1cd6)!important;
+  backdrop-filter:blur(8px) saturate(1.6);
+  -webkit-backdrop-filter:blur(8px) saturate(1.6);
+  box-shadow:0 0 0 5px #05192866,
+    0 0 19px currentColor,
+    inset 0 0 13px #aeeaff45!important;
+  text-shadow:0 0 9px currentColor;
+}
+.marker.small{
+  width:48px;height:48px;color:#ffdc75;
+}
+.marker.large{
+  width:62px;height:62px;color:#ff627f;
+  animation:holo-breathe 1.7s ease-in-out infinite;
+}
+.marker.human{
+  width:44px;height:44px;color:#a3d5ec;
+}
+.marker:before{
+  content:"";
+  position:absolute;inset:-12px;
+  border:1px dashed currentColor;
+  border-radius:50%;opacity:.65;
+  pointer-events:none;
+  animation:holo-spin 12s linear infinite;
+}
+.marker:after{
+  content:"";
+  position:absolute;
+  left:50%;top:100%;
+  height:27px;width:1px;
+  background:linear-gradient(currentColor,transparent);
+  opacity:.85;pointer-events:none;
+}
+.marker.selected{
+  outline:2px solid #eaffff;
+  outline-offset:6px;
+  filter:brightness(1.25);
+}
+@keyframes holo-spin{
+  to{transform:rotate(360deg)}
+}
+@keyframes holo-breathe{
+  0%,100%{
+    box-shadow:0 0 0 5px #28101e88,
+    0 0 15px #ff5375,
+    inset 0 0 12px #ffd5e555;
+  }
+  50%{
+    box-shadow:0 0 0 8px #53152a66,
+    0 0 32px #ff5375,
+    inset 0 0 20px #ffd5e588;
+  }
+}
+section{
+  border-color:#207c96;
+  box-shadow:inset 0 0 24px #0d87a513;
+}
+section h2{
+  padding-bottom:10px;
+  border-bottom:1px solid #216078;
+}
+#message{
+  box-shadow:0 0 18px #23e1ff22;
+  backdrop-filter:blur(8px);
+}
+#sample:not(:disabled){
+  background:linear-gradient(145deg,#0d5472,#0b263e);
+  box-shadow:0 0 13px #27dfff44;
+}
+#remove:not(:disabled),#tap{
+  border-color:#ff7189;
+  background:linear-gradient(145deg,#71213d,#331424);
+  box-shadow:0 0 14px #ff4b6e55;
+}
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#020911;color:#c9f6ff;font:13px system-ui,Arial}
