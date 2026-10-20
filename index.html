@@ -1,50 +1,52 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EARTH-001 地球培养皿</title>
+<title>EARTH-001 · 地球培养皿</title>
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#030b17;color:#c9faff;font:14px system-ui}
-header,section,footer{border:1px solid #187c92;background:#071b2ddd;border-radius:8px;padding:12px}
-header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
-h1{font-size:18px;margin:0;color:#73eaf7}
-h2{font-size:14px;color:#6bd7e8;margin:0 0 12px}
-#layout{display:grid;grid-template-columns:220px 1fr 260px;gap:10px;padding:10px}
+body{margin:0;background:#020911;color:#c9f6ff;font:13px system-ui,Arial}
+header{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:12px 16px;border-bottom:1px solid #126278;background:#051523}
+h1{margin:0;color:#6eeeff;font-size:17px;letter-spacing:2px}
+h2{font-size:12px;letter-spacing:2px;color:#6eeeff;margin:0 0 14px}
+#layout{display:grid;grid-template-columns:230px minmax(0,1fr) 260px;gap:10px;padding:10px;max-width:1600px;margin:auto}
 aside{display:flex;flex-direction:column;gap:10px}
-button{background:#123e56;color:#e4fcff;border:1px solid #32a7bd;border-radius:7px;padding:12px;cursor:pointer;touch-action:manipulation}
+section{border:1px solid #176477;background:#071724e8;padding:14px;border-radius:4px}
+section p{line-height:1.7}
+#stage{height:min(76vh,790px);min-height:490px;position:relative;overflow:hidden;border:1px solid #176477;background:radial-gradient(ellipse at center,#0c3049 0,#030b17 68%,#01040b 100%);touch-action:none}
+#globe{position:absolute;inset:0;z-index:1}
+#globe canvas{display:block;width:100%;height:100%;touch-action:none}
+.marker{position:absolute;z-index:4;display:grid;place-items:center;border:2px solid currentColor;border-radius:50%;background:#071322de;box-shadow:0 0 12px currentColor;transform:translate(-50%,-50%);font-weight:800;touch-action:none;user-select:none}
+.small{width:38px;height:38px;color:#ffd366}
+.large{width:50px;height:50px;color:#ff596d;animation:pulse 1.4s infinite}
+.human{width:36px;height:36px;color:#b7c3cf}
+.selected{outline:2px solid white}
+@keyframes pulse{50%{box-shadow:0 0 28px currentColor}}
+#message{position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:5;padding:8px 12px;border:1px solid #27869e;background:#031322d9;text-align:center;max-width:94%;pointer-events:none}
+#stage:after{content:'DRAG TO ROTATE  ◈  EARTH MONITOR';position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:3;color:#6bafbd;letter-spacing:2px;font-size:10px;white-space:nowrap;pointer-events:none}
+.meter{height:7px;background:#173547;margin:8px 0 16px}
+.meter i{display:block;background:#36d8d3;height:100%}
+button{border:1px solid #25899f;background:#103c51;color:#d9fcff;border-radius:4px;padding:12px;cursor:pointer;touch-action:manipulation}
 button:disabled{opacity:.35}
-#stage{position:relative;min-height:500px;display:grid;place-items:center;overflow:hidden;background:radial-gradient(ellipse,#143251,#020710 75%);border:1px solid #155a75;border-radius:12px;touch-action:none}
-#earth{position:relative;width:min(65vw,65vh,600px);aspect-ratio:1;border-radius:50%;overflow:hidden;background:radial-gradient(circle at 28% 26%,#428dbb,#125083 38%,#071c51 70%,#010c26 95%);box-shadow:0 0 30px #19d6ef77,inset -30px -20px 45px #000a;transform:rotate(-8deg)}
-#earth:before{content:"";position:absolute;inset:9% 15%;border-radius:45%;background:#52a39b;clip-path:polygon(10% 4%,58% 0,90% 23%,70% 45%,91% 65%,55% 60%,42% 95%,20% 68%,0 40%)}
-#earth:after{content:"";position:absolute;inset:35% 5% 12% 58%;background:#b6a36b;clip-path:polygon(10% 0,100% 20%,82% 75%,30% 100%,0 55%)}
-.marker{position:absolute;z-index:3;border:2px solid currentColor;border-radius:50%;display:grid;place-items:center;font-weight:bold;background:#141b2de8;box-shadow:0 0 15px currentColor;user-select:none;touch-action:none}
-.small{width:38px;height:38px;color:#ffd66a}
-.large{width:52px;height:52px;color:#ff6876;animation:pulse 1.5s infinite}
-.human{width:35px;height:35px;color:#b6b8c5}
-.selected{outline:3px solid white}
-@keyframes pulse{50%{box-shadow:0 0 30px currentColor;transform:scale(1.08)}}
-.meter{height:8px;background:#153449;border-radius:10px;overflow:hidden;margin:10px 0}
-.meter i{display:block;height:100%;background:#27d1cf}
-#details{min-height:140px;line-height:1.8}
-#logs{max-height:150px;overflow:auto;font-size:12px;line-height:1.8}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-#tap{width:100%;background:#702537}
-#message{position:absolute;top:12px;left:50%;transform:translateX(-50%);background:#071c2df0;padding:10px;border:1px solid #35b2ce;border-radius:6px;width:max-content;max-width:90%;text-align:center}
-footer{margin:0 10px 10px;display:flex;justify-content:center;align-items:center;gap:12px}
-#modal{position:fixed;inset:0;background:#000c;z-index:10;display:grid;place-items:center;padding:24px}
-#modal>div{max-width:520px;background:#092033;border:1px solid #39d2e9;padding:26px;border-radius:12px;line-height:1.8}
+button:active{background:#227b92}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+#tap{width:100%;background:#642132;margin-top:8px}
+#details{min-height:120px;line-height:1.8}
+#logs{max-height:180px;overflow:auto;font-size:12px;line-height:1.9}
+footer{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;padding:12px}
+.warning{color:#fda7b3}
+#modal{position:fixed;inset:0;background:#000c;z-index:20;display:grid;place-items:center;padding:20px}
 #modal[hidden]{display:none}
+#modal>div{background:#071d2e;border:1px solid #31b5ce;max-width:530px;padding:24px;line-height:1.9}
+#modal button{width:100%}
 @media(max-width:850px){
 #layout{display:flex;flex-direction:column}
 aside{display:contents}
 aside section{order:1}
-#stage{min-height:390px;order:0}
-#earth{width:min(88vw,380px)}
-header{font-size:12px}
-footer{flex-wrap:wrap}
+#stage{order:0;height:52vh;min-height:390px}
+header{font-size:11px}
 }
 </style>
 </head>
@@ -52,15 +54,14 @@ footer{flex-wrap:wrap}
 <header>
 <h1>◈ EARTH-001 地球培养皿</h1>
 <span id="day">DAY 001</span>
-<span>星球建造学 · 研究生终端</span>
+<span>PLANETARY LAB · 研究生终端</span>
 </header>
 <div id="layout">
 <aside>
 <section>
 <h2>WORLD MAP / 实验档案</h2>
 <p>🌐 地球异常监控</p>
-<p>课题负责人：见习研究生</p>
-<p>指导教授：离线 💤</p>
+<p>课题负责人：见习研究生<br>指导教授：离线 💤</p>
 </section>
 <section>
 <h2>EXPERIMENT STATUS</h2>
@@ -72,17 +73,17 @@ footer{flex-wrap:wrap}
 </section>
 <section>
 <h2>导师留言</h2>
-<p>“地球交给你了。小问题拖走，大问题自己研究一下。”</p>
+<p>“小问题拖走，大问题记得采样。人类的事情不准插手。”</p>
 </section>
 </aside>
 <main id="stage">
-<div id="earth"></div>
-<div id="message">拖走黄色警报，处理红色大型灾害</div>
+<div id="globe"></div>
+<div id="message">初始化行星扫描仪……</div>
 </main>
 <aside>
 <section>
 <h2>ANOMALY INSPECTOR</h2>
-<div id="details">点击地球上的警报查看详情。</div>
+<div id="details">点击地球表面的警报查看详情。</div>
 </section>
 <section>
 <h2>COUNTERMEASURES</h2>
@@ -111,33 +112,32 @@ footer{flex-wrap:wrap}
 <button id="continue">继续</button>
 </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.1/build/three.min.js"></script>
 <script>
 const $=id=>document.getElementById(id);
-let phase=0,selected=null,samples=0,cleared=0;
-let stability=100,taps=0,events=[],busy=false;
+let phase=0,selected=null,samples=0,cleared=0,stability=100,taps=0,events=[],busy=false,globe=null;
 const waves=[
 [
-['small','太平洋热带风暴','太平洋',30,36],
-['small','火山活动','南美洲',29,70],
-['large','地壳异常','东亚',76,35],
-['human','地区冲突','欧亚大陆',55,29]
+["small","太平洋热带风暴","太平洋",15,15],
+["small","火山活动","南美洲",-16,-70],
+["large","地壳异常","东亚",34,108],
+["human","地区冲突","欧亚大陆",48,44]
 ],
 [
-['small','异常洪水','欧洲',47,31],
-['large','海底岩浆活动','印度洋',65,67],
-['small','极端高温','非洲',48,54],
-['large','板块共振','日本近海',82,40]
+["small","异常洪水","欧洲",49,12],
+["large","海底岩浆活动","印度洋",-18,78],
+["small","极端高温","非洲",11,23],
+["large","板块共振","日本近海",36,143]
 ],
 [
-['small','异常洋流','太平洋',20,58],
-['large','深层地壳扰动','西太平洋',79,65],
-['small','超级风暴','北美洲',22,28]
+["small","异常洋流","太平洋",5,-135],
+["large","深层地壳扰动","西太平洋",-5,145],
+["small","超级风暴","北美洲",39,-98]
 ]
 ];
-function log(s){
-$('logs').innerHTML='<div>▸ '+s+'</div>'+$('logs').innerHTML;
-}
-function note(s){$('message').textContent=s}
+function note(t){$('message').textContent=t}
+function log(t){$('logs').innerHTML='<div>▸ '+t+'</div>'+$('logs').innerHTML}
 function update(){
 $('samples').textContent=samples+' / 3';
 $('samplebar').style.width=Math.min(100,samples/3*100)+'%';
@@ -145,20 +145,25 @@ $('cleared').textContent=cleared;
 $('stability').textContent=stability+'%';
 $('stablebar').style.width=stability+'%';
 $('phase').textContent='阶段 '+(phase+1)+' / 3';
-$('day').textContent='DAY '+String(1+phase*30).padStart(3,'0');
+$('day').textContent='DAY '+String(1+phase*30).padStart(3,'0')
+}
+function modal(title,body,cb){
+$('modalTitle').textContent=title;
+$('modalText').textContent=body;
+$('modal').hidden=false;
+$('continue').onclick=()=>{
+$('modal').hidden=true;
+cb?.()
+}
 }
 function select(e){
 selected=e;taps=0;
 $('tap').hidden=true;
 $('progress').textContent='';
-document.querySelectorAll('.marker').forEach(x=>{
-x.classList.toggle('selected',x.dataset.id===e.id);
-});
-$('details').innerHTML='<b>'+e.name+'</b><p>位置：'+e.place+
-'</p><p>类型：'+({small:'轻度自然灾害',large:'大型自然灾害',human:'人类内部事件'}[e.type])+
-'</p><p>'+(e.type==='human'?'文明自主行为，干预权限不足。':e.type==='small'?'向外拖拽警报即可拔除。':'大型异常已扎根，普通拖拽无法清除。')+'</p>';
+document.querySelectorAll('.marker').forEach(x=>x.classList.toggle('selected',x.dataset.id===e.id));
+$('details').innerHTML='<b>'+e.name+'</b><p>位置：'+e.place+'</p><p>类型：'+({small:'轻度自然灾害',large:'大型自然灾害',human:'人类内部事件'}[e.type])+'</p><p>'+(e.type==='human'?'文明自主行为：禁止干预':e.type==='small'?'拖拽黄色警报即可拔除':'灾害已扎根：可采样或强制拔除')+'</p>';
 $('sample').disabled=e.type!=='large'||e.sampled;
-$('remove').disabled=e.type!=='large';
+$('remove').disabled=e.type!=='large'
 }
 function clearEvent(e){
 if(e.done)return;
@@ -166,116 +171,219 @@ e.done=true;cleared++;
 stability=Math.min(100,stability+2);
 document.querySelector('[data-id="'+e.id+'"]')?.remove();
 selected=null;
-$('details').textContent='异常已处理。';
-$('sample').disabled=true;
-$('remove').disabled=true;
+$('details').textContent='异常已处理';
+$('sample').disabled=$('remove').disabled=true;
 $('tap').hidden=true;
 log('已拔除：'+e.name);
 note('异常已成功拔除');
-update();
+update()
 }
 function spawn(){
 selected=null;
 $('details').textContent='请选择异常警报';
-$('sample').disabled=true;
-$('remove').disabled=true;
+$('sample').disabled=$('remove').disabled=true;
 $('tap').hidden=true;
 $('progress').textContent='';
-events=waves[phase].map((a,i)=>({
-id:phase+'-'+i,type:a[0],name:a[1],place:a[2],
-x:a[3],y:a[4],sampled:false,done:false
-}));
 document.querySelectorAll('.marker').forEach(x=>x.remove());
+events=waves[phase].map((a,i)=>({
+id:phase+'-'+i,type:a[0],name:a[1],place:a[2],lat:a[3],lon:a[4],sampled:false,done:false
+}));
 events.forEach(e=>{
-let el=document.createElement('div');
+const el=document.createElement('div');
 el.className='marker '+e.type;
 el.dataset.id=e.id;
 el.textContent=e.type==='small'?'!':e.type==='human'?'×':'⚠';
-el.style.left=e.x+'%';
-el.style.top=e.y+'%';
 $('stage').appendChild(el);
 let start=null;
 el.addEventListener('pointerdown',v=>{
 v.stopPropagation();
 start={x:v.clientX,y:v.clientY};
-el.setPointerCapture(v.pointerId);
+el.setPointerCapture(v.pointerId)
 });
 el.addEventListener('pointermove',v=>{
 if(!start)return;
-let d=Math.hypot(v.clientX-start.x,v.clientY-start.y);
-if(e.type==='small'&&d>70){
-start=null;clearEvent(e);
-}else if(e.type==='large'&&d>35){
-note('大型灾害无法直接拖动，请采样或强制拔除');
-}
+const d=Math.hypot(v.clientX-start.x,v.clientY-start.y);
+if(e.type==='small'&&d>65){
+start=null;clearEvent(e)
+}else if(e.type==='large'&&d>35)
+note('大型灾害无法拖走，请采样或强制拔除')
 });
 el.addEventListener('pointerup',()=>{
 if(start&&!e.done)select(e);
-start=null;
+start=null
+})
 });
-});
-note('第 '+(phase+1)+' 轮异常涌现！');
+note('第 '+(phase+1)+' 轮异常涌现！旋转地球寻找警报');
 log('新一轮警报出现');
-update();
+update()
 }
 $('sample').onclick=()=>{
 if(!selected||selected.sampled||busy)return;
 busy=true;
-let e=selected;
-note('🧪 滴管下降……正在吸取异常样本');
+const e=selected;
+note('🧪 滴管正在提取异常样本……');
 $('sample').disabled=true;
 setTimeout(()=>{
 e.sampled=true;samples++;busy=false;
 note('样本已归档，仍需拔除灾害');
 log('采样完成：'+e.name);
-update();
-},1300);
+update()
+},1200)
 };
 $('remove').onclick=()=>{
 if(!selected)return;
 taps=0;
 $('tap').hidden=false;
 $('progress').textContent='拔除进度 0 / 12';
-note('连续点击按钮，将灾害拔出');
+note('连续点击，将大型灾害拔出')
 };
 $('tap').onclick=()=>{
 if(!selected)return;
 taps++;
 $('progress').textContent='拔除进度 '+taps+' / 12';
-if(taps>=12)clearEvent(selected);
+if(taps>=12)clearEvent(selected)
 };
-function modal(t,s,cb){
-$('modalTitle').textContent=t;
-$('modalText').textContent=s;
-$('modal').hidden=false;
-$('continue').onclick=()=>{
-$('modal').hidden=true;
-if(cb)cb();
-};
-}
 $('next').onclick=()=>{
 if(phase<2){
 phase++;
 stability=Math.max(65,stability-6);
 spawn();
-if(phase===2)modal('潜在异常仍未定位',
-'教授留下的地壳异常一直没有找到源头。实验室建议保留采样记录。');
+if(phase===2)modal('潜在异常仍未定位','教授留下的深层地壳异常仍在扩大。请尽量保留采样记录。')
 }else{
-modal('最终预警 · 日本近海 9.9级地震',
-'检测到虚构的极端地震预警。'+
-(samples>=3?
-'采样记录达到要求，成功提前定位并制止异常。地球新闻将其报道为一次机器误报。':
-'由于采样数据不足，无法及时定位深层异常。实验未能完成最终干预。'),
-()=>{
+modal('最终预警 · 日本近海 9.9级地震','检测到虚构的极端地震预警。'+(samples>=3?'采样记录达标，成功定位并制止异常。地球新闻将其报道为机器误报。':'采样记录不足，无法定位深层异常。实验未能完成最终干预。'),()=>{
 $('next').disabled=true;
-note('DEMO END · 实验报告已归档');
-});
+note('DEMO END · 实验报告已归档')
+})
 }
 };
 $('reset').onclick=()=>location.reload();
+
+function makeFallbackTexture(T){
+const c=document.createElement('canvas');
+c.width=2048;c.height=1024;
+const x=c.getContext('2d');
+x.fillStyle='#06508e';
+x.fillRect(0,0,c.width,c.height);
+const land=[
+[[10,15],[35,10],[53,23],[48,35],[37,45],[27,62],[15,57],[6,38]],
+[[32,52],[45,55],[51,72],[44,93],[35,84],[29,68]],
+[[48,12],[63,7],[85,18],[98,33],[94,53],[80,62],[69,49],[62,62],[56,44],[45,37]],
+[[70,51],[80,53],[85,78],[75,91],[67,75]],
+[[85,72],[98,70],[99,88],[90,94]],
+[[42,5],[52,4],[53,17],[46,23]]
+];
+x.fillStyle='#65a36c';
+land.forEach(p=>{
+x.beginPath();
+p.forEach(([a,b],i)=>i?x.lineTo(a*20.48,b*10.24):x.moveTo(a*20.48,b*10.24));
+x.closePath();x.fill();
+x.strokeStyle='#e6c58b';
+x.lineWidth=5;x.stroke()
+});
+for(let i=0;i<25000;i++){
+let xx=Math.random()*2048,yy=Math.random()*1024;
+let pixel=x.getImageData(xx,yy,1,1).data;
+if(pixel[1]>pixel[2]*.9){
+x.fillStyle=Math.random()>.5?'#398758':'#b3a46e';
+x.fillRect(xx,yy,2+Math.random()*6,2+Math.random()*6)
+}
+}
+let t=new T.CanvasTexture(c);
+t.colorSpace=T.SRGBColorSpace;
+return t
+}
+
+function initGlobe(){
+if(!window.THREE){
+note('3D库加载失败，请检查网络后刷新');
+return
+}
+const T=THREE,mount=$('globe'),scene=new T.Scene(),
+camera=new T.PerspectiveCamera(38,1,.1,100),
+renderer=new T.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));
+renderer.outputColorSpace=T.SRGBColorSpace;
+mount.appendChild(renderer.domElement);
+scene.add(new T.AmbientLight(0x8aaac8,1.6));
+const sun=new T.DirectionalLight(0xffffff,2.4);
+sun.position.set(-4,4,7);
+scene.add(sun);
+const planet=new T.Group();
+scene.add(planet);
+const loader=new T.TextureLoader();
+const mat=new T.MeshStandardMaterial({map:makeFallbackTexture(T),roughness:.9});
+const earth=new T.Mesh(new T.SphereGeometry(1.65,96,64),mat);
+planet.add(earth);
+loader.load('https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg',t=>{
+t.colorSpace=T.SRGBColorSpace;
+mat.map=t;mat.needsUpdate=true
+},undefined,()=>log('使用内置地貌纹理'));
+const cloudMat=new T.MeshPhongMaterial({color:0xffffff,transparent:true,opacity:.2,depthWrite:false});
+const clouds=new T.Mesh(new T.SphereGeometry(1.675,80,48),cloudMat);
+planet.add(clouds);
+loader.load('https://threejs.org/examples/textures/planets/earth_clouds_1024.png',t=>{
+cloudMat.map=t;cloudMat.needsUpdate=true
+},undefined,()=>{clouds.visible=false});
+const atm=new T.Mesh(new T.SphereGeometry(1.74,64,48),new T.ShaderMaterial({
+transparent:true,side:T.BackSide,depthWrite:false,
+vertexShader:'varying vec3 n;varying vec3 v;void main(){vec4 p=modelViewMatrix*vec4(position,1.);v=normalize(-p.xyz);n=normalize(normalMatrix*normal);gl_Position=projectionMatrix*p;}',
+fragmentShader:'varying vec3 n;varying vec3 v;void main(){float g=pow(1.-abs(dot(normalize(n),normalize(v))),3.);gl_FragColor=vec4(.13,.78,1.,g*.45);}'
+}));
+scene.add(atm);
+const wire=new T.Mesh(new T.SphereGeometry(1.79,32,16),new T.MeshBasicMaterial({
+color:0x24a5c6,transparent:true,opacity:.045,wireframe:true,depthWrite:false
+}));
+scene.add(wire);
+planet.rotation.y=-.6;
+planet.rotation.x=.2;
+let drag=false,lx=0,ly=0;
+renderer.domElement.addEventListener('pointerdown',e=>{
+drag=true;lx=e.clientX;ly=e.clientY;
+renderer.domElement.setPointerCapture(e.pointerId)
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+if(!drag)return;
+planet.rotation.y+=(e.clientX-lx)*.006;
+planet.rotation.x=Math.max(-1.1,Math.min(1.1,planet.rotation.x+(e.clientY-ly)*.004));
+lx=e.clientX;ly=e.clientY
+});
+renderer.domElement.addEventListener('pointerup',()=>drag=false);
+renderer.domElement.addEventListener('pointercancel',()=>drag=false);
+function resize(){
+const w=mount.clientWidth,h=mount.clientHeight;
+if(!w||!h)return;
+camera.aspect=w/h;
+camera.position.set(0,0,w<650?6.4:5.4);
+camera.updateProjectionMatrix();
+renderer.setSize(w,h,false)
+}
+new ResizeObserver(resize).observe(mount);
+resize();
+const v=new T.Vector3();
+function frame(){
+requestAnimationFrame(frame);
+if(!drag)planet.rotation.y+=.0006;
+clouds.rotation.y+=.00012;
+events.forEach(e=>{
+const el=document.querySelector('[data-id="'+e.id+'"]');
+if(!el)return;
+const phi=(90-e.lat)*Math.PI/180,theta=(e.lon+180)*Math.PI/180;
+v.set(-1.73*Math.sin(phi)*Math.cos(theta),1.73*Math.cos(phi),1.73*Math.sin(phi)*Math.sin(theta));
+v.applyEuler(planet.rotation);
+const visible=v.z>0;
+v.project(camera);
+el.style.display=visible?'grid':'none';
+el.style.left=(v.x+1)*50+'%';
+el.style.top=(1-v.y)*50+'%'
+});
+renderer.render(scene,camera)
+}
+frame();
+globe=planet
+}
 modal('EARTH-001 · 课题交接',
-'你是外星大学星球建造学的新研究生。导师把地球培养皿交给了你：只能处理自然灾害，不能干预人类内部行为。请收集至少3份大型异常样本，迎接最终考核。',
-spawn);
+'你是外星大学星球建造学的见习研究生。拖动地球寻找警报，小灾害直接拖走，大灾害需要采样或强制拔除。至少收集3份样本，迎接最终考核。',
+()=>{spawn();initGlobe()});
 </script>
 </body>
 </html>
